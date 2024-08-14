@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RUNABLE Community</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #002eff;
+       	background-image: url('https://i.ibb.co/480mx1r/Section02.png');
+        background-size: cover;
+        background-position: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        .main-content {
+            background: #ffffff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: 2px solid #002eff;
+        }
+        .button {
+            display: inline-block;
+            width: 200px;
+            height: 50px;
+            background: #002eff;
+            color: #ffffff;
+            text-align: center;
+            line-height: 50px;
+            margin: 20px auto;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        #quiz, #result {
+            display: none;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+        }
+        .option {
+            background: #bfd2ff;
+            color: #002eff;
+            border: none;
+            padding: 10px;
+            margin: 5px 0;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+        .option:hover {
+            background: #002eff;
+            color: #ffffff;
+        }
+        #result {
+            text-align: center;
+        }
+        #runningGauge {
+            font-size: 72px;
+            font-weight: bold;
+            color: #002eff;
+            margin: 40px 0;
+            text-shadow: 2px 2px 4px rgba(0, 46, 255, 0.3);
+        }
+        .slogan {
+            font-size: 28px;
+            font-weight: bold;
+            color: #002eff;
+            margin-top: 20px;
+        }
+        .coming-soon {
+            font-size: 24px;
+            color: #002eff;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .result-message {
+            font-size: 18px;
+            color: #002eff;
+            margin-top: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+</style>
+</head>
+<body>
+<div class="container">
+<div class="main-content">
+<div id="intro">
+<h2>뼛속까지 진성 러너인 당신을 위한 러닝 커뮤니티가 옵니다.</h2>
+<p>당신의 러닝 게이지를 측정해볼까요?</p>
+<button id="start" class="button">테스트 시작하기</button>
+</div>
+ 
+            <div id="quiz">
+<!-- 질문들은 JavaScript로 동적 생성됩니다 -->
+</div>
+ 
+            <div id="result">
+<h2>당신의 러닝 게이지는...</h2>
+<p id="runningGauge"></p>
+<p class="slogan">Run Together! Talk Together!</p>
+<p class="result-message">당신의 일상 속 러닝을 공유할 수 있는 커뮤니티와 함께 하세요!</p>
+<p class="coming-soon">COMING SOON</p>
+</div>
+</div>
+</div>
+ 
+    <script>
+        const questions = [
+            {
+                question: "러닝을 시작할 때 주로 어떤 생각을 하나요?",
+                options: ["오늘은 얼마나 빨리 달릴 수 있을까?", "경치를 즐기며 천천히 달려볼까?", "오늘 목표 거리를 채울 수 있을까?", "러닝 후의 성취감을 생각하며 시작한다"]
+            },
+            {
+                question: "러닝 중 예상치 못한 언덕을 만났을 때 당신의 반응은?",
+                options: ["도전! 전력으로 달려 오른다", "페이스를 조절하며 천천히 올라간다", "우회로를 찾아본다", "잠시 걷다가 다시 뛰기 시작한다"]
+            },
+            {
+                question: "러닝 후 가장 먼저 하는 일은?",
+                options: ["기록을 확인하고 분석한다", "시원한 물을 마신다", "스트레칭을 한다", "SNS에 오늘의 러닝을 공유한다"]
+            },
+            {
+                question: "러닝화를 고를 때 가장 중요하게 생각하는 점은?",
+                options: ["기능성과 성능", "편안함과 쿠션감", "디자인과 스타일", "가격 대비 효율성"]
+            },
+            {
+                question: "가장 선호하는 러닝 코스는?",
+                options: ["트랙 경기장", "숲속 트레일", "도심 속 공원", "해변가"]
+            }
+        ];
+ 
+        let currentQuestion = 0;
+        let answers = [];
+ 
+        document.getElementById('start').addEventListener('click', startQuiz);
+ 
+        function startQuiz() {
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('quiz').style.display = 'block';
+            showQuestion();
+        }
+ 
+        function showQuestion() {
+            const quizContainer = document.getElementById('quiz');
+            const question = questions[currentQuestion];
+            let questionHTML = `
+<div class="question">
+<h3>${question.question}</h3>
+<div class="options">
+                        ${question.options.map((option, index) => `
+<button class="option" onclick="selectOption(${index})">${option}</button>
+                        `).join('')}
+</div>
+</div>
+            `;
+            quizContainer.innerHTML = questionHTML;
+        }
+ 
+        function selectOption(optionIndex) {
+            answers.push(optionIndex);
+            currentQuestion++;
+ 
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+ 
+        function showResult() {
+            const result = calculateResult();
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('runningGauge').textContent = `${result}%`;
+        }
+ 
+        function calculateResult() {
+            const sum = answers.reduce((a, b) => a + b, 0);
+            return Math.round((sum / 20) * 100);
+        }
+</script>
+</body>
+</html>
